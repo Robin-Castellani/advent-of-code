@@ -1,3 +1,6 @@
+import click
+
+
 def read_calibration(input_calibration: str) -> int:
     integers_as_strings = tuple(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9]))
 
@@ -16,3 +19,17 @@ def read_calibration(input_calibration: str) -> int:
         calibration_value += int(number_as_string)
 
     return calibration_value
+
+
+@click.command
+@click.option(
+    "--file",
+    "-f",
+    type=click.types.File(mode="r", encoding="utf-8"),
+    required=True,
+    help="Calibration file",
+)
+def cli(file):
+    calibration = read_calibration(file.read())
+
+    click.echo(f"Calibration: {calibration}")

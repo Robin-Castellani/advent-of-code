@@ -1,6 +1,6 @@
 # from aoc._2023._01.__main__ import read_calibration
 from pathlib import Path
-from aoc.main_2023_01 import read_calibration
+from y2023_d01.main import read_calibration
 
 # from aoc.__main__ import read_calibration
 import pytest

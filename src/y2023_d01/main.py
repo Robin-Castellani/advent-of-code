@@ -1,20 +1,36 @@
+import re
 import click
 
 
 def read_calibration(input_calibration: str) -> int:
-    integers_as_strings = tuple(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9]))
+    numbers_names_to_int = {
+        "one": "1",
+        "two": "2",
+        "three": "3",
+        "four": "4",
+        "five": "5",
+        "six": "6",
+        "seven": "7",
+        "eight": "8",
+        "nine": "9",
+    }
+    number_names = tuple(numbers_names_to_int.keys())
+    regex = re.compile("\d|" + "|".join(number_names))
+
+    number_names_reversed = [n[::-1] for n in number_names]
+    regex_reverse = re.compile("\d|" + "|".join(number_names_reversed))
 
     calibration_value = 0
     for line in input_calibration.split("\n"):
-        number_as_string = ""
-        for letter in line:
-            if letter in integers_as_strings:
-                number_as_string += letter
+        matches = regex.findall(line)
+        matches_p = tuple(map(lambda n: numbers_names_to_int.get(n, n), matches))
 
-        if len(number_as_string) == 1:
-            number_as_string += number_as_string
-        if len(number_as_string) > 2:
-            number_as_string = number_as_string[0] + number_as_string[-1]
+        matches_reverse = regex_reverse.findall(line[::-1])
+        matches_reverse_p = tuple(
+            map(lambda n: numbers_names_to_int.get(n[::-1], n), matches_reverse)
+        )
+
+        number_as_string = matches_p[0] + matches_reverse_p[0]
 
         calibration_value += int(number_as_string)
 

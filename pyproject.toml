@@ -18,3 +18,4 @@ addopts = [
 
 [project.scripts]
 y2023-d01 = "y2023_d01.main:cli"
+y2023-d02 = "y2023_d02.main:cli"

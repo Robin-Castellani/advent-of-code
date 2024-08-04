@@ -37,5 +37,22 @@ def play_game(input_game: str, config: Config) -> int:
 
 
 @click.command()
-def cli():
-    click.echo("Advent of Code - Day 2 🎄")
+@click.option(
+    "--file",
+    "-f",
+    type=click.types.File(mode="r", encoding="utf-8"),
+    required=True,
+    help="Games file",
+)
+@click.option(
+    "--red-green-blue-configuration",
+    "-c",
+    "rgb_configuration",
+    type=(int, int, int),
+    required=True,
+    help="Red Green Blue cubes in the bag (aka Configuration)",
+)
+def cli(file, rgb_configuration):
+    ids_sum = play_game(file.read(), Config(*rgb_configuration))
+
+    click.echo(f"Sum of possible games: {ids_sum}")

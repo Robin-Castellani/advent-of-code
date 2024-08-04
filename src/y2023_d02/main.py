@@ -1,13 +1,14 @@
 import click
 from collections import namedtuple
+from functools import reduce
 
 Config = namedtuple("Configuration", "red, green, blue")
-Game = namedtuple("Game", "id, red, green, blue")
 
 
 def play_game(input_game: str, config: Config) -> tuple[int, int]:
     records = input_game.split("\n")
     games_ids = {}
+    games_power = {}
     for game in records:
         game_id, game_sets = game.split(":")
         game_id = int(game_id.split(" ")[-1])
@@ -16,6 +17,7 @@ def play_game(input_game: str, config: Config) -> tuple[int, int]:
         # instantiate a Game with the max number of cubes set to 0
         # these will be update for each game set
         games_ids[game_id] = {"red": 0, "green": 0, "blue": 0}
+        games_power[game_id] = {"red": 0, "green": 0, "blue": 0}
 
         for game_set in game_sets:
             for cube_set in game_set.split(", "):
@@ -24,6 +26,12 @@ def play_game(input_game: str, config: Config) -> tuple[int, int]:
                 if games_ids[game_id][color] < int(number):
                     games_ids[game_id][color] = int(number)
 
+        # compute the power of all the games
+        games_power[game_id] = reduce(
+            lambda acc, n: acc * n,
+            games_ids[game_id].values(),
+            1,
+        )
         # is the game possible when compared with the configuration?
         if (
             games_ids[game_id]["red"] > config.red
@@ -33,7 +41,9 @@ def play_game(input_game: str, config: Config) -> tuple[int, int]:
             games_ids.pop(game_id)
     # sum up the ids of all the possible games
     ids_sum = sum(games_ids.keys())
-    return ids_sum, 2286
+    # sum up the power of all games
+    power_sum = sum(games_power.values())
+    return ids_sum, power_sum
 
 
 @click.command()

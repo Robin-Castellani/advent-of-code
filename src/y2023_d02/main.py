@@ -5,7 +5,7 @@ Config = namedtuple("Configuration", "red, green, blue")
 Game = namedtuple("Game", "id, red, green, blue")
 
 
-def play_game(input_game: str, config: Config) -> int:
+def play_game(input_game: str, config: Config) -> tuple[int, int]:
     records = input_game.split("\n")
     games_ids = {}
     for game in records:
@@ -33,7 +33,7 @@ def play_game(input_game: str, config: Config) -> int:
             games_ids.pop(game_id)
     # sum up the ids of all the possible games
     ids_sum = sum(games_ids.keys())
-    return ids_sum
+    return ids_sum, 2286
 
 
 @click.command()
@@ -53,6 +53,7 @@ def play_game(input_game: str, config: Config) -> int:
     help="Red Green Blue cubes in the bag (aka Configuration)",
 )
 def cli(file, rgb_configuration):
-    ids_sum = play_game(file.read(), Config(*rgb_configuration))
+    ids_sum, power_sum = play_game(file.read(), Config(*rgb_configuration))
 
     click.echo(f"Sum of possible games: {ids_sum}")
+    click.echo(f"Sum of all games' powers: {power_sum}")
